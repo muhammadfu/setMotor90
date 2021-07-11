@@ -1,0 +1,22 @@
+import RPi.GPIO as GPIO
+import time
+
+# Set pin to 32 for vertical servo, and 33 for horizontal servo
+pin = 32
+GPIO.setmode(GPIO.BOARD)    # set GPIO numbering mode
+GPIO.setup(pin, GPIO.OUT)   # set pin as output
+s = GPIO.PWM(pin, 50)       # set pin as PWM output at 50 Hz
+
+# Start servo with pulse off
+s.start(0)
+time.sleep(0.5)
+
+# Set to home position. The home position is where the expected offsets arrive and laser points straight ahead. For
+# vetical servo, this is slightly below 90 at ~87.5 degrees, while for horizontal it is at 90.
+
+s.ChangeDutyCycle(6.48)  # for vertical and horizontal motor, this is ~87.5 @6.48 and 90 @6.7 respectively
+time.sleep(1)            # give time to rotate
+s.ChangeDutyCycle(0)     # turn pulse off
+time.sleep(0.5)          # some extra time
+s.stop()                 # stop servo
+GPIO.cleanup()           # cleanup GPIOs for fresh assignment
